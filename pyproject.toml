@@ -1,0 +1,21 @@
+[project]
+name = "12-gpt-from-scratch-sk"
+version = "0.1.0"
+description = "GPT from scratch on Slovak: own BPE tokenizer, small transformer, KV cache"
+requires-python = ">=3.12"
+dependencies = [
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+    "pyarrow>=26.0.0",
+    "regex>=2026.9.29",
+    "tiktoken>=0.14.0",
+    "torch>=2.15.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.17.3",
+]
+
+[tool.ruff]
+line-length = 120
