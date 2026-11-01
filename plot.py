@@ -157,28 +157,39 @@ def attention() -> None:
     save(fig, "attention.png")
 
 
+def show_token(t: str) -> str:
+    """Make whitespace visible: · for a space, ↵ for a newline."""
+    return t.replace(" ", "·").replace("\n", "↵")
+
+
+def wrap_text(text: str, width: int = 58) -> str:
+    lines = []
+    for line in text.split("\n"):  # keep the model's own line breaks, wrap only long lines
+        lines += textwrap.wrap(line, width) or [""]
+    return "\n".join(lines[-7:])
+
+
 def generation_gif() -> None:
     steps = load("results_generate.json")["gif_steps"]
-    fig, (ax_t, ax_b) = plt.subplots(2, 1, figsize=(8, 5.6), gridspec_kw={"height_ratios": [1, 1.4]})
+    fig = plt.figure(figsize=(8, 5.8))
+    ax_t = fig.add_axes([0.04, 0.5, 0.92, 0.42])
+    ax_b = fig.add_axes([0.24, 0.1, 0.7, 0.36])
 
     def frame(i):
-        s = steps[min(i, len(steps) - 1)]
+        k = min(i, len(steps) - 1)
+        s = steps[k]
         ax_t.clear()
         ax_t.axis("off")
-        ax_t.text(0, 0.85, "\n".join(textwrap.wrap(s["text"], 60)), fontsize=12, va="top", family="monospace")
-        ax_t.set_title(f"token {min(i, len(steps) - 1) + 1}: the model picks the next token (T = 0.7)", fontsize=10)
+        ax_t.text(0, 1, wrap_text(s["text"]), fontsize=11, va="top", family="monospace")
+        ax_t.set_title(f"step {k + 1}: the model picks the next token (T = 0.7)", fontsize=10)
         ax_b.clear()
-        labels = [t.replace(" ", "·") for t, _ in s["top"]][::-1]
-        probs = [p for _, p in s["top"]][::-1]
-        colors = [GREEN if t == s["chosen"] else GRAY for t, _ in s["top"]][::-1]
-        ax_b.barh(labels, probs, color=colors)
+        y = np.arange(len(s["top"]))[::-1]  # most likely on top; positions, not labels, so duplicates can't merge
+        ax_b.barh(y, [p for _, p in s["top"]], color=[GREEN if t == s["chosen"] else GRAY for t, _ in s["top"]])
+        ax_b.set_yticks(y, [show_token(t) for t, _ in s["top"]], fontsize=10)
         ax_b.set(xlim=(0, 1), xlabel="probability of the next token (top 6)")
-        ax_b.text(
-            0.98, 0.05, f"drawn: {s['chosen'].replace(' ', '·')!r}", transform=ax_b.transAxes, ha="right", color=GREEN
-        )
+        ax_b.text(0.98, 0.05, f"drawn: {show_token(s['chosen'])}", transform=ax_b.transAxes, ha="right", color=GREEN)
         return []
 
-    fig.tight_layout()
     FuncAnimation(fig, frame, frames=len(steps) + 6).save("assets/generation.gif", writer=PillowWriter(fps=2), dpi=80)
     plt.close(fig)
 
