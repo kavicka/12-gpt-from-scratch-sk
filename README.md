@@ -1,6 +1,6 @@
 # 12 · GPT from scratch on Slovak
 
-🇸🇰 [Slovenská verzia](README.sk.md)
+🇸🇰 [Slovenská verzia](README.sk.md) · 📘 [Step-by-step tutorial](TUTORIAL.md)
 
 ## TL;DR
 Roadmap project P4: my own byte-level BPE tokenizer and a decoder-only transformer, both written from scratch and trained on 297 million characters of Slovak Wikipedia on a Mac mini (M4 Pro, MPS). Every number comes from the `results_*.json` files.

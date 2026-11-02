@@ -1,6 +1,6 @@
 # 12 · GPT od nuly na slovenčine
 
-🇬🇧 [English version](README.md)
+🇬🇧 [English version](README.md) · 📘 [Tutoriál krok za krokom](TUTORIAL.sk.md)
 
 ## TL;DR
 Projekt P4 z roadmapy: vlastný bajtový BPE tokenizer a decoder-only transformer, oba napísané od nuly a natrénované na 297 miliónoch znakov slovenskej Wikipédie na Macu mini (M4 Pro, MPS). Všetky čísla pochádzajú zo súborov `results_*.json`.
