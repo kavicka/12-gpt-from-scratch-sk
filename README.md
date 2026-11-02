@@ -13,6 +13,13 @@ Roadmap project P4: my own byte-level BPE tokenizer and a decoder-only transform
 
 ![The model writes one token at a time](assets/generation.gif)
 
+## Start here
+Think of text completion on a phone: given a few words, the system guesses what comes next. This project builds a small version of that idea for Slovak. **The input** is Slovak Wikipedia articles; **the output** is a model that can continue a prompt one token (a piece of a word) at a time.
+
+First, a **tokenizer** splits text into pieces and assigns each one a number. Then a GPT model is built: for each piece, it looks at earlier pieces and predicts the next one. During training, wrong predictions produce a loss and the model adjusts its weights. On held-out articles the final model reaches perplexity 20.0 versus 136.4 for a simple bigram baseline; lower means better next-token predictions.
+
+The GIF shows generation step by step. Other plots compare tokenizers, model sizes, and generation speed with a **KV cache** (saved intermediate calculations). The model produces article-like text but may invent facts. The project demonstrates the whole path from data preparation to training and measuring a small GPT, not reliable question answering.
+
 ## Problem
 Every LLM in phases 2–4 of the roadmap is a stack of the same pieces: a tokenizer, embeddings, self-attention, MLP blocks and a sampling loop. P4 builds all of them by hand, small enough to train on a Mac, so that later "fine-tune Qwen" or "RAG with a local model" are no longer black boxes. Slovak is the deliberate twist: tokenizers built mostly for English make Slovak longer and therefore more expensive and worse, which matters for the SK/CZ market.
 

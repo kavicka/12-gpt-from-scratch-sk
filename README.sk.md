@@ -13,6 +13,13 @@ Projekt P4 z roadmapy: vlastný bajtový BPE tokenizer a decoder-only transforme
 
 ![Model píše po jednom tokene](assets/generation.gif)
 
+## Najprv jednoducho
+Predstav si dopĺňanie textu v mobile: po niekoľkých slovách systém odhaduje, čo príde ďalej. Tento projekt stavia malú verziu takejto myšlienky pre slovenčinu. **Vstupom** sú články zo slovenskej Wikipédie; **výstupom** je model, ktorý vie po zadanom začiatku tvoriť ďalší text, po jednom tokene (kúsku slova) za druhým.
+
+Najprv vznikne **tokenizer**, ktorý text rozdelí na kúsky a pridelí im čísla. Potom sa postaví GPT: pre každý kúsok sa pozrie na predchádzajúce kúsky a odhaduje ďalší. Pri tréningu dostane za nesprávne odhady chybu a upraví váhy. Na odložených článkoch má výsledný model perplexitu 20,0, kým jednoduchý bigramový odhad má 136,4; nižšie číslo znamená lepšiu predpoveď ďalšieho tokenu.
+
+GIF ukazuje tvorbu textu krok po kroku. Ďalšie grafy porovnávajú tokenizery, veľkosti modelu a rýchlosť generovania s **KV cache** (uloženými medzivýsledkami). Model píše text podobný článku, ale môže si vymýšľať fakty. Projekt dokazuje zvládnutie celého postupu od spracovania dát po tréning a meranie malého GPT, nie spoľahlivé zodpovedanie otázok.
+
 ## Problém
 Každé LLM vo fázach 2–4 roadmapy je kopa tých istých kúskov: tokenizer, embeddingy, self-attention, MLP bloky a slučka na vzorkovanie. P4 ich všetky postaví ručne, dosť malé na tréning na Macu, aby neskoršie „dolaď Qwen“ alebo „RAG s lokálnym modelom“ už neboli čierne skrinky. Slovenčina je zámerná zápletka: tokenizery stavané hlavne pre angličtinu robia slovenčinu dlhšou, a teda drahšou a horšou, čo je dôležité pre SK/CZ trh.
 
