@@ -6,3 +6,4 @@ mlruns/
 .pytest_cache/
 data/
 models/
+logs/
